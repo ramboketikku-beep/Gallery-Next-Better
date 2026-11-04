@@ -161,46 +161,85 @@
   }
   async function loadBooks() {
     $("bookGrid").innerHTML = '<div class="empty">Menghubungkan ke perpustakaan...</div>';
-    const { data, error } = await db.from("books").select("id,title,author,category,description,cover_url,html_path,status,is_free,price").eq("status", "published");
+
+    const { data, error } = await db
+      .from("books")
+      .select("id,title,author,description,cover_url,html_path,status,is_premium,price,category:categories(name)")
+      .eq("status", "published");
+
     if (error) {
       $("bookGrid").innerHTML = '<div class="empty">Katalog belum dapat dimuat. Periksa koneksi Supabase dan kebijakan SELECT pada tabel books.</div>';
       $("bookCount").textContent = "Katalog tidak tersedia";
       console.error("Gagal memuat buku:", error);
       return;
     }
+    }
     books = (data || []).sort((a,b) => String(a.title || "").localeCompare(String(b.title || ""), "id"));
     renderCategories(); renderBooks();
   }
+
   function renderBooks() {
     const query = $("searchInput").value.trim().toLocaleLowerCase("id");
-    const rows = books.filter(book => (!selectedCategory || book.category === selectedCategory) &&
-      (!query || `${book.title || ""} ${book.author || ""} ${book.description || ""}`.toLocaleLowerCase("id").includes(query)));
+
+    const rows = books.filter(book =>
+      (!selectedCategory || book.category?.name === selectedCategory) &&
+      (!query || `${book.title || ""} ${book.author || ""} ${book.description || ""}`.toLocaleLowerCase("id").includes(query))
+    );
+
     $("bookCount").textContent = `${rows.length} ebook tersedia`;
-    const grid = $("bookGrid"); grid.replaceChildren();
+
+    const grid = $("bookGrid");
+    grid.replaceChildren();
+
     if (!rows.length) {
       grid.innerHTML = '<div class="empty">Belum ada ebook yang cocok. Coba kata kunci atau kategori lain.</div>';
       return;
     }
+
     rows.forEach(book => {
-      const card = document.createElement("article"); card.className = "book";
+      const card = document.createElement("article");
+      card.className = "book";
+
       const cover = book.cover_url
         ? `<img loading="lazy" src="${escapeHtml(book.cover_url)}" alt="Sampul ${escapeHtml(book.title)}">`
         : `<div class="placeholder">${escapeHtml(book.title || "NEXT BETTER")}</div>`;
-      const isFree = book.is_free === true || Number(book.price || 0) === 0;
-      const priceLabel = isFree ? "Gratis" : `Premium · Rp${Number(book.price || 0).toLocaleString("id-ID")}`;
-      card.innerHTML = `<div class="cover">${cover}</div><div class="book-info"><h3>${escapeHtml(book.title)}</h3><p>${escapeHtml(book.author || "Penulis tidak dicantumkan")} · ${escapeHtml(book.category || "Umum")}</p><p class="desc">${escapeHtml(book.description || "")}</p><p><strong>${priceLabel}</strong></p><button class="btn small primary readBtn" type="button">${isFree ? "Baca ebook" : "Akses premium"}</button></div>`;
+
+      const isFree = book.is_premium !== true;
+      const price = Number(book.price || 0);
+
+      const priceLabel = isFree
+        ? "Gratis"
+        : `Premium · Rp${price.toLocaleString("id-ID")}`;
+
+      const categoryName = book.category?.name || "Umum";
+
+      card.innerHTML = `
+        <div class="cover">${cover}</div>
+        <div class="book-info">
+          <h3>${escapeHtml(book.title)}</h3>
+          <p>${escapeHtml(book.author || "Penulis tidak dicantumkan")} · ${escapeHtml(categoryName)}</p>
+          <p class="desc">${escapeHtml(book.description || "")}</p>
+          <p><strong>${priceLabel}</strong></p>
+          <button class="btn small primary readBtn" type="button">
+            ${isFree ? "Baca ebook" : "Akses premium"}
+          </button>
+        </div>
+      `;
+
       const action = card.querySelector(".readBtn");
+
       action.addEventListener("click", () => {
         if (!isFree) {
-          alert("Ebook ini termasuk konten premium. Fitur pembayaran dan verifikasi kepemilikan belum diaktifkan.");
+          alert("Ebook premium memerlukan pembelian. Sistem pembayaran belum diaktifkan.");
           return;
         }
+
         readBook(book);
       });
+
       grid.appendChild(card);
     });
   }
-
   async function checkAdmin(user) {
     isAdmin = false;
     const adminLink = $("adminBtn");
@@ -231,34 +270,77 @@
 
   async function readBook(book) {
     $("readerTitle").textContent = book.title || "Membaca ebook";
-    $("readerContent").textContent = "Menyiapkan ebook...";
+    $("readerContent").textContent = "Memeriksa akses ebook...";
     show("readerOverlay");
-    if (!book.html_path) {
-      $("readerContent").textContent = "File ebook belum terhubung pada data buku (html_path kosong).";
-      return;
-    }
+
     try {
-      // Bucket book-files bersifat private; signed URL berumur 5 menit dan tunduk pada Storage RLS.
-      const { data, error } = await db.storage.from("book-files").createSignedUrl(book.html_path, 300);
-      if (error || !data?.signedUrl) throw error || new Error("Storage tidak mengembalikan signed URL.");
+      if (!book.id) {
+        throw new Error("ID ebook tidak ditemukan.");
+      }
+
+      const { data: sessionData, error: sessionError } =
+        await db.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      const token = sessionData.session?.access_token;
+
+      if (!token) {
+        throw new Error("Silakan masuk terlebih dahulu untuk membaca ebook.");
+      }
+
+      const { data, error } = await db.functions.invoke(
+        "read-book",
+        {
+          body: { book_id: book.id }
+        }
+      );
+
+      if (error) throw error;
+
+      if (!data?.signedUrl) {
+        throw new Error("Server tidak memberikan akses file ebook.");
+      }
+
+      $("readerContent").textContent = "Memuat isi ebook...";
+
       const response = await fetch(data.signedUrl);
-      if (!response.ok) throw new Error(`File gagal diambil (HTTP ${response.status}).`);
+
+      if (!response.ok) {
+        throw new Error(`File gagal diambil (HTTP ${response.status}).`);
+      }
+
       const html = await response.text();
       const doc = new DOMParser().parseFromString(html, "text/html");
-      doc.querySelectorAll("script,iframe,object,embed,form,base,meta[http-equiv],link").forEach(node => node.remove());
+
+      doc.querySelectorAll(
+        "script,iframe,object,embed,form,base,meta[http-equiv],link"
+      ).forEach(node => node.remove());
+
       doc.querySelectorAll("*").forEach(node => {
         [...node.attributes].forEach(attr => {
-          if (/^on/i.test(attr.name) || ((attr.name === "href" || attr.name === "src") && /^\s*javascript:/i.test(attr.value))) node.removeAttribute(attr.name);
+          if (
+            /^on/i.test(attr.name) ||
+            ((attr.name === "href" || attr.name === "src") &&
+            /^\s*javascript:/i.test(attr.value))
+          ) {
+            node.removeAttribute(attr.name);
+          }
         });
       });
+
       const article = $("readerContent");
       article.innerHTML = doc.body.innerHTML || "<p>Isi ebook kosong.</p>";
       article.style.fontSize = readerSize + "px";
       article.className = "readercontent " + (readerLight ? "light" : "dark");
+
     } catch (error) {
-      $("readerContent").textContent = `Ebook tidak dapat dibuka: ${error.message}. Periksa Storage RLS pada bucket book-files.`;
+      $("readerContent").textContent =
+        `Ebook tidak dapat dibuka: ${error.message}`;
+
       console.error("Gagal membuka ebook:", error);
     }
+  }
   }
   $("readerBack").addEventListener("click", () => hide("readerOverlay"));
   $("fontUp").addEventListener("click", () => { readerSize = Math.min(30, readerSize + 1); $("readerContent").style.fontSize = readerSize + "px"; });
