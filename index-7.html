@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F2EC">
+  <title>NEXT BETTER. — Read. Learn. Grow.</title>
+  <meta name="description" content="NEXT BETTER adalah ruang baca digital untuk menemukan ebook berkualitas, belajar, dan bertumbuh.">
+  <meta name="robots" content="index,follow">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+    :root{color-scheme:light;--paper:#F5F2EC;--paper-2:#EDE7DC;--ink:#20231F;--muted:#77766F;--gold:#B78B45;--gold-soft:#E8D7B8;--line:#DED8CD;--white:#FFFEFB;--panel:#FFFEFB;--panel2:#F0ECE4;--text:#20231F;--danger:#A43E35;--ok:#477454;--shadow:0 14px 40px #29251b0d}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--paper)}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.65 'DM Sans',sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{width:min(1200px,91%);margin:auto}
+    header{position:sticky;top:0;z-index:20;background:#F5F2ECed;backdrop-filter:blur(16px);border-bottom:1px solid #DED8CDaa}.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;font-weight:700;letter-spacing:-.5px;font-size:18px;white-space:nowrap}.brandmark{width:36px;height:36px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#D0A75F,#9B7132);font:700 23px 'Playfair Display',serif;transform:skew(-9deg);border-radius:9px 3px 9px 3px}.brand .dot{color:var(--gold)}.navlinks{display:flex;gap:27px;align-items:center}.navlinks a{color:#57574f;text-decoration:none;font-size:12px;font-weight:600;transition:color .2s}.navlinks a:hover{color:var(--gold)}.nav-actions{display:flex;align-items:center;gap:9px}.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--line);background:transparent;color:var(--ink);padding:10px 17px;border-radius:5px;transition:background .2s,border-color .2s,transform .2s}.btn:hover{border-color:var(--gold);background:#B78B4510}.btn.primary{background:var(--ink);border-color:var(--ink);color:white;font-weight:600}.btn.primary:hover{background:#383A33;transform:translateY(-1px)}.btn.small{padding:8px 14px;font-size:12px}.menu{display:none}
+    .hero{padding:46px 0 38px}.hero-panel{min-height:420px;position:relative;overflow:hidden;border-radius:8px;background:linear-gradient(110deg,#EAE3D7 0%,#F4EFE6 57%,#E7DCCB 100%);display:grid;grid-template-columns:1.05fr .95fr;align-items:center;box-shadow:var(--shadow)}.hero-copy{position:relative;z-index:2;padding:clamp(32px,6vw,76px)}.eyebrow{color:#9A7136;letter-spacing:2.8px;text-transform:uppercase;font-size:10px;font-weight:700}.hero h1{font:600 clamp(42px,5.8vw,70px)/1.04 'Playfair Display',Georgia,serif;letter-spacing:-1.8px;max-width:610px;margin:18px 0;color:var(--ink)}.hero h1 em{font-weight:500;color:#A87936}.hero p{color:#66655D;max-width:490px;margin:0 0 25px;font-size:14px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.hero-art{height:100%;min-height:390px;position:relative;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 55% 52%,#C6A66F55,transparent 52%)}.hero-art:before{content:'';position:absolute;width:310px;height:390px;border-radius:5px;background:linear-gradient(145deg,#323B3B,#111B1C);box-shadow:22px 25px 45px #17171355;transform:rotate(7deg);right:23%;top:11%;border:1px solid #ffffff33}.hero-art:after{content:'N\A NEXT\A BETTER.';white-space:pre;position:absolute;right:31%;top:28%;transform:rotate(7deg);color:#E7D2A7;font:600 26px/1.3 'Playfair Display',serif;text-align:center;letter-spacing:1px}.art-stack{position:absolute;width:390px;height:45px;right:9%;bottom:13%;background:linear-gradient(#F6F0E4,#C8B99F);border-radius:4px;box-shadow:0 14px 18px #29251b22;transform:skewY(-3deg)}.art-stack:before,.art-stack:after{content:'';position:absolute;left:8%;right:8%;height:10px;background:#B7A78D;bottom:-12px;border-radius:2px}.art-stack:after{bottom:-24px;background:#E4D9C6}.art-caption{position:absolute;bottom:8%;right:10%;font:italic 15px 'Playfair Display',serif;color:#776044;letter-spacing:1px}
+    section{padding:28px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:21px}.section-head h2{font:600 clamp(26px,3vw,34px) 'Playfair Display',Georgia,serif;margin:5px 0;color:var(--ink)}.section-head p{margin:0;color:var(--muted);font-size:12px}.search{width:min(100%,380px);min-width:260px;display:flex;align-items:center;gap:4px;padding:4px;background:var(--white);border:1px solid var(--line);border-radius:99px;box-shadow:0 3px 12px #29251b08;transition:border-color .2s,box-shadow .2s}.search:focus-within{border-color:#B78B45;box-shadow:0 0 0 3px #B78B4518}.search input{flex:1;min-width:0;width:100%;height:40px;padding:0 14px;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:12px}.search input::placeholder{color:#99958B;opacity:1}.search .btn{flex:none;min-height:40px;padding:0 19px;border-radius:99px;white-space:nowrap}.categories{display:flex;gap:9px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);color:#5E5D55;background:#FFFEFB;padding:9px 16px;border-radius:99px;font-size:12px;transition:.2s}.chip-icon{font-size:16px;line-height:1}.chip-label{line-height:1.2}.chip.active,.chip:hover{border-color:var(--ink);color:white;background:var(--ink)}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}.book{background:var(--white);border:1px solid #E5DED2;border-radius:6px;overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s;box-shadow:0 5px 18px #28251b08}.book:hover{transform:translateY(-4px);border-color:#C8AD7F;box-shadow:0 14px 28px #28251b13}.cover{height:240px;background:linear-gradient(145deg,#D6C7AD,#9B8B70);display:grid;place-items:center;overflow:hidden}.cover img{width:100%;height:100%;object-fit:cover}.cover .placeholder{font:600 23px/1.2 'Playfair Display',serif;color:#fff;padding:22px;text-align:center}.book-info{padding:15px}.book-info h3{font:600 18px/1.3 'Playfair Display',Georgia,serif;margin:0 0 5px;color:var(--ink)}.book-info p{color:var(--muted);font-size:11px;margin:0 0 10px}.book-info .desc{height:38px;overflow:hidden}.book-info .btn{margin-top:3px}.empty{grid-column:1/-1;text-align:center;padding:44px 15px;border:1px dashed #CFC6B7;border-radius:7px;color:var(--muted);background:#FFFEFB}
+    .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:22px 24px;background:#EEE8DD;border-radius:7px;margin:26px auto 40px}.benefit{display:flex;align-items:center;gap:12px;padding:4px 14px;border-right:1px solid #D4C7B2}.benefit:last-child{border:0}.benefit-icon{font-size:23px;color:#A87936}.benefit strong{display:block;font-size:12px}.benefit span{display:block;color:var(--muted);font-size:10px}.cta{margin:20px auto 54px;padding:34px 40px;border-radius:7px;background:linear-gradient(100deg,#202522,#34362F 65%,#514533);color:white;display:flex;align-items:center;justify-content:space-between;gap:25px;overflow:hidden}.cta h2{font:600 clamp(25px,3vw,36px)/1.15 'Playfair Display',serif;margin:0;max-width:520px}.cta p{color:#D3D0C7;font-size:12px;max-width:330px}.cta .btn{background:#D3B477;border-color:#D3B477;color:#24231F;font-weight:700;white-space:nowrap}
+    footer{margin-top:0;background:#20231F;color:#E9E4D9;padding:42px 0 22px;font-size:12px}.footgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:30px}.footbrand{font:600 21px 'Playfair Display',serif;color:#F5F2EC}.footbrand span{color:#D0A75F}.footgrid p,.footgrid a{font-size:11px;color:#BDBBB2}.footgrid a{display:block;margin:8px 0;text-decoration:none}.footgrid a:hover{color:#E4C78F}.footgrid h4{margin:0 0 13px;color:#F1EDE4;font-size:12px}.newsletter{display:flex;background:#34372F;border:1px solid #55564C;padding:4px;border-radius:5px}.newsletter input{min-width:0;flex:1;background:transparent;border:0;padding:8px;color:white;outline:0;font-size:11px}.newsletter button{border:0;background:#D0A75F;border-radius:4px;padding:0 12px}.copyright{border-top:1px solid #ffffff25;margin-top:28px;padding-top:17px;color:#A9A79E;font-size:10px;display:flex;justify-content:space-between;gap:12px}
+    .overlay{position:fixed;inset:0;background:#171914c9;z-index:40;display:none;overflow:auto;padding:24px;backdrop-filter:blur(5px)}.overlay.show{display:block}.modal{max-width:850px;margin:4vh auto;background:var(--white);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:25px;box-shadow:0 25px 80px #0003}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.modal h2{font:600 28px 'Playfair Display',Georgia,serif;margin:0}.close{font-size:25px;background:none;border:0;color:var(--muted)}.field{display:grid;gap:6px;margin:13px 0}.field label{font-size:12px;color:#66645D}.field input,.field select,.field textarea{width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:5px;color:var(--ink);padding:11px;outline:none}.field textarea{min-height:90px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.notice{padding:11px 13px;border:1px solid var(--line);border-radius:5px;color:var(--muted);font-size:12px;margin:12px 0;background:#F5F2EC}.notice.error{color:var(--danger)}.notice.ok{color:var(--ok)}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.admin-list{display:grid;gap:9px}.admin-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#F5F2EC;border:1px solid var(--line);border-radius:5px}.admin-item small{display:block;color:var(--muted)}.reader{max-width:900px;margin:0 auto}.readerbar{position:sticky;top:-24px;background:var(--paper);padding:12px 0;display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--line);z-index:2}.readercontent{max-width:720px;margin:35px auto;font:19px/1.9 Georgia,serif;color:#24251F;background:#FFFEFB;padding:28px}.readercontent img{max-width:100%;height:auto}.readercontent h1,.readercontent h2,.readercontent h3{line-height:1.3}.readercontent.dark{background:#20231F;color:#E5E0D6}.readercontent.light{background:#FFFEFB;color:#24251F;padding:28px;border-radius:5px}
+    @media(max-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.navlinks{gap:14px}.hero-art:before{right:15%}.hero-art:after{right:23%}.benefits{grid-template-columns:repeat(2,1fr)}.benefit:nth-child(2){border:0}}
+    @media(max-width:650px){.navlinks[data-open="true"]{display:flex!important;position:absolute;left:15px;right:15px;top:66px;z-index:30;flex-direction:column;align-items:stretch;gap:0;padding:10px 15px;background:#FFFEFB;border:1px solid var(--line);border-radius:7px;box-shadow:var(--shadow)}.navlinks[data-open="true"] a{padding:10px 2px;border-bottom:1px solid var(--line)}.navlinks[data-open="true"] a:last-child{border:0}.wrap{width:calc(100% - 30px)}.nav{height:66px}.navlinks{display:none}.menu{display:inline-flex}.nav-actions{gap:6px}.brand{font-size:15px}.brandmark{width:31px;height:31px}.hero{padding:20px 0 24px}.hero-panel{grid-template-columns:1fr;min-height:0}.hero-copy{padding:30px 25px 10px}.hero h1{font-size:43px;letter-spacing:-1px}.hero p{font-size:13px}.hero-art{min-height:250px}.hero-art:before{width:180px;height:230px;right:27%;top:5%}.hero-art:after{right:37%;top:23%;font-size:17px}.art-stack{width:260px;right:6%;bottom:11%;height:28px}.art-caption{right:8%;bottom:4%;font-size:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cover{height:190px}.section-head{align-items:stretch;flex-direction:column}.section-head .search{width:100%;max-width:100%;min-width:0}.section{padding:22px 0}.book-info{padding:11px}.book-info h3{font-size:16px}.benefits{grid-template-columns:1fr 1fr;padding:15px 10px;gap:10px}.benefit{padding:5px;border:0}.benefit-icon{font-size:19px}.cta{padding:25px;display:block;margin-bottom:35px}.cta p{margin:12px 0}.footgrid{grid-template-columns:1fr 1fr;gap:22px}.footgrid>div:first-child,.footgrid>div:last-child{grid-column:1/-1}.copyright{display:block;line-height:2}.row{grid-template-columns:1fr}.modal{padding:18px}.overlay{padding:10px}.readercontent{font-size:17px;padding:18px}.admin-item{align-items:flex-start}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+    :focus-visible{outline:2px solid #B78B45;outline-offset:3px}
+  
+    [hidden]{display:none!important}
+    .admin-code-input{width:100%;background:#FBFAF7;border:1px solid var(--line);border-radius:5px;color:var(--ink);padding:12px;outline:none;font:inherit}
+  </style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <a class="brand" href="#home" aria-label="NEXT BETTER beranda"><span class="brandmark" id="brandMark">N</span><span>NEXT BETTER<span class="dot">.</span></span></a>
+  <nav class="navlinks" aria-label="Navigasi utama"><a href="#home">Beranda</a><a href="#kategori">Kategori</a><a href="#koleksi">Koleksi</a><a href="#tentang">Tentang</a><a href="#tentang">Bantuan</a></nav>
+  <div class="nav-actions"><button class="btn small" id="loginBtn">Masuk</button><a class="btn small primary" id="adminBtn" href="admin.html" hidden>Admin</a><button class="btn small menu" id="menuBtn" type="button" aria-expanded="false">Menu</button></div>
+</div></header>
+<main>
+  <section class="hero" id="home"><div class="wrap"><div class="hero-panel"><div class="hero-copy"><div class="eyebrow">Read. Learn. Grow.</div><h1>Lebih dari sekadar membaca, ini tentang menjadi <em>lebih baik.</em></h1><p>Temukan eBook berkualitas untuk menambah ilmu, mengasah keterampilan, dan meraih masa depan yang lebih baik.</p><div class="hero-actions"><a class="btn primary" href="#koleksi">Jelajahi Koleksi&nbsp; →</a><a class="btn" href="#tentang">Kenali NEXT BETTER</a></div></div><div class="hero-art" aria-label="Ilustrasi buku NEXT BETTER"><div class="art-stack"></div><div class="art-caption">A room for better ideas.</div></div></div></div></section>
+  <section id="kategori"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Explore by interest</div><h2>Kategori Pilihan</h2><p>Pilih topik yang ingin kamu dalami.</p></div></div><div class="categories" id="categoryList" aria-label="Filter kategori buku"><button class="chip active" data-category="">Semua</button></div></div></section>
+  <section id="koleksi"><div class="wrap"><div class="section-head"><div><div class="eyebrow">The digital library</div><h2>Rekomendasi untukmu</h2><p id="bookCount">Memuat koleksi...</p></div><div class="search"><input id="searchInput" type="search" placeholder="Cari judul atau penulis buku..." aria-label="Cari buku"><button class="btn primary small" id="searchBtn" type="button">Cari</button></div></div><div class="grid" id="bookGrid"><div class="empty">Menghubungkan ke perpustakaan...</div></div></div></section>
+  <div class="wrap benefits" aria-label="Keunggulan NEXT BETTER"><div class="benefit"><div class="benefit-icon">✧</div><div><strong>Akses Instan</strong><span>Baca kapan saja, di mana saja.</span></div></div><div class="benefit"><div class="benefit-icon">◇</div><div><strong>Privasi Terjaga</strong><span>Pengalaman membaca yang aman.</span></div></div><div class="benefit"><div class="benefit-icon">▣</div><div><strong>Multi-Perangkat</strong><span>Nikmati di berbagai perangkat.</span></div></div><div class="benefit"><div class="benefit-icon">✦</div><div><strong>Konten Berkualitas</strong><span>Pilihan bacaan untuk bertumbuh.</span></div></div></div>
+  <section class="wrap cta"><div><div class="eyebrow" style="color:#D9B979">Your next chapter starts here</div><h2>Mulai perjalananmu menuju versi terbaik dirimu.</h2></div><div><p>Temukan bacaan yang membuka perspektif dan membawamu selangkah lebih maju.</p><a class="btn" href="#koleksi">Jelajahi sekarang →</a></div></section>
+</main>
+<footer id="tentang"><div class="wrap"><div class="footgrid"><div><div class="footbrand">NEXT BETTER<span>.</span></div><p>Read. Learn. Grow.<br>Ruang digital untuk pengetahuan, inspirasi, dan pertumbuhan.</p></div><div><h4>Navigasi</h4><a href="#home">Beranda</a><a href="#kategori">Kategori</a><a href="#koleksi">Koleksi</a></div><div><h4>Informasi</h4><a href="#tentang">Tentang Kami</a><a href="#tentang">Kebijakan Privasi</a><a href="#tentang">Bantuan</a></div><div><h4>Berlangganan Newsletter</h4><p>Dapatkan kabar terbaru dari NEXT BETTER.</p><form class="newsletter" id="newsletterForm"><input type="email" placeholder="Masukkan email Anda" aria-label="Email newsletter" required><button type="submit" aria-label="Berlangganan">→</button></form><small id="newsletterMessage" style="display:block;color:#D3D0C7;margin-top:7px"></small></div></div><div class="copyright"><span>© <span id="year"></span> NEXT BETTER. Semua hak dilindungi.</span><span>Read. Learn. Grow.</span></div></div></footer>
+
+<div class="overlay" id="authOverlay"><div class="modal" style="max-width:470px"><div class="modal-head"><h2 id="authTitle">Masuk</h2><button class="close" data-close="authOverlay">×</button></div><div class="tabs"><button class="btn small primary" id="showLogin">Masuk</button><button class="btn small" id="showSignup">Daftar</button></div><div class="field"><label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="nama@email.com"></div><div class="field"><label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Minimal 6 karakter"></div><button class="btn primary" id="emailAuth" style="width:100%">Masuk</button><div class="notice" id="authMessage">Pengunjung dapat menjelajahi katalog. Masuk untuk fitur akun.</div><button class="btn" id="logoutAccountBtn" style="width:100%;margin-top:9px" hidden>Keluar dari akun</button></div></div>
+
+<div class="overlay" id="adminCodeOverlay"><div class="modal" style="max-width:430px"><div class="modal-head"><h2>Verifikasi akses</h2><button class="close" data-close="adminCodeOverlay" aria-label="Tutup">×</button></div><p style="color:var(--muted);font-size:13px;line-height:1.7">Masukkan kode akses administrator untuk menampilkan tombol Admin pada sesi browser ini.</p><div class="field"><label for="adminAccessCode">Kode rahasia</label><input class="admin-code-input" id="adminAccessCode" type="password" autocomplete="off" placeholder="Masukkan kode akses" maxlength="128"></div><button class="btn primary" id="verifyAdminCode" style="width:100%">Verifikasi kode</button><div class="notice" id="adminCodeMessage" role="status">Kode diverifikasi melalui Supabase Edge Function.</div></div></div>
+
+<div class="overlay" id="readerOverlay"><div class="reader"><div class="readerbar"><button class="btn small" id="readerBack">← Kembali</button><strong id="readerTitle" style="font-family:Georgia,serif"></strong><div style="display:flex;gap:6px"><button class="btn small" id="fontDown">A−</button><button class="btn small" id="fontUp">A+</button><button class="btn small" id="themeToggle">Tema</button></div></div><article class="readercontent" id="readerContent">Memuat buku...</article></div></div>
+
+<script>
+(() => {
+  "use strict";
+  const SUPABASE_URL = "https://tgnvlniimkmbcjagjvbo.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_IBQyLZdk0aTCTSNbVLeqUw_PFtljozZ";
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  const $ = id => document.getElementById(id);
+  let books = [], categories = [], selectedCategory = "", authMode = "login";
+  let currentUser = null, isAdmin = false, readerSize = 19, readerLight = false;
+  const ADMIN_CODE_SESSION_KEY = "next_better_admin_code_verified";
+  let adminCodeVerified = sessionStorage.getItem(ADMIN_CODE_SESSION_KEY) === "1";
+
+  $("year").textContent = new Date().getFullYear();
+  const show = id => $(id)?.classList.add("show");
+  const hide = id => $(id)?.classList.remove("show");
+  function message(id, text, type = "") {
+    const el = $(id); if (!el) return;
+    el.textContent = text; el.className = "notice" + (type ? " " + type : "");
+  }
+  function escapeHtml(value = "") {
+    return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  }
+  function categoryName(row) { return row.name || row.title || row.category || ""; }
+
+  document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => hide(button.dataset.close)));
+  document.querySelectorAll(".overlay").forEach(overlay => overlay.addEventListener("click", event => {
+    if (event.target === overlay) hide(overlay.id);
+  }));
+  // Hidden admin entry: tap the brand mark five times within three seconds.
+  let brandTapCount = 0, brandTapTimer = null;
+  $("brandMark").addEventListener("click", event => {
+    event.preventDefault();
+    brandTapCount++;
+    clearTimeout(brandTapTimer);
+    brandTapTimer = setTimeout(() => { brandTapCount = 0; }, 3000);
+    if (brandTapCount >= 5) {
+      brandTapCount = 0;
+      clearTimeout(brandTapTimer);
+      $("adminAccessCode").value = "";
+      message("adminCodeMessage", "Masukkan kode akses administrator.");
+      show("adminCodeOverlay");
+      setTimeout(() => $("adminAccessCode").focus(), 50);
+    }
+  });
+  $("verifyAdminCode").addEventListener("click", async () => {
+    const code = $("adminAccessCode").value;
+    if (!code) { message("adminCodeMessage", "Kode akses wajib diisi.", "error"); return; }
+    const button = $("verifyAdminCode");
+    button.disabled = true;
+    button.textContent = "Memverifikasi...";
+    try {
+      const { data, error } = await db.functions.invoke("verify-admin-code", { body: { code } });
+      if (error || !data?.valid) throw new Error(data?.message || error?.message || "Kode akses tidak valid.");
+      adminCodeVerified = true;
+      sessionStorage.setItem(ADMIN_CODE_SESSION_KEY, "1");
+      hide("adminCodeOverlay");
+      await checkAdmin(currentUser);
+      if (!currentUser) {
+        show("authOverlay");
+        message("authMessage", "Kode akses benar. Masuk menggunakan akun administrator Supabase untuk menampilkan tombol Admin.", "ok");
+      } else if (!isAdmin) {
+        message("adminCodeMessage", "Kode benar, tetapi akun ini tidak terdaftar sebagai administrator.", "error");
+      }
+    } catch (error) {
+      message("adminCodeMessage", error.message || "Verifikasi gagal. Pastikan Edge Function sudah dipasang.", "error");
+    } finally {
+      button.disabled = false;
+      button.textContent = "Verifikasi kode";
+      $("adminAccessCode").value = "";
+    }
+  });
+  $("adminAccessCode").addEventListener("keydown", event => {
+    if (event.key === "Enter") $("verifyAdminCode").click();
+  });
+  $("menuBtn").addEventListener("click", () => {
+    const nav = document.querySelector(".navlinks");
+    const open = nav.dataset.open !== "true";
+    nav.dataset.open = String(open);
+    nav.style.display = open ? "flex" : "none";
+    $("menuBtn").setAttribute("aria-expanded", String(open));
+  });
+  document.querySelectorAll(".navlinks a").forEach(link => link.addEventListener("click", () => {
+    if (matchMedia("(max-width: 650px)").matches) {
+      document.querySelector(".navlinks").style.display = "none";
+      document.querySelector(".navlinks").dataset.open = "false";
+      $("menuBtn").setAttribute("aria-expanded", "false");
+    }
+  }));
+
+  async function loadCategories() {
+    const { data, error } = await db.from("categories").select("*");
+    if (error) {
+      console.warn("Kategori tidak dapat dimuat; kategori akan dibentuk dari data buku.", error.message);
+      categories = [];
+    } else {
+      categories = (data || []).map(row => categoryName(row)).filter(Boolean);
+    }
+    renderCategories();
+  }
+  const CATEGORY_ICON_POOL = ["🧠","📚","💼","💰","🌱","🎨","🔬","🏛️","💻","🧘","🗣️","📈","✍️","🌍","⚖️","🎓","🧭","🛠️","❤️","🚀","🎭","🔍","🌿","🧩"];
+  const CATEGORY_ICON_HINTS = [
+    [/psikolog|mental|emosi|mindset|pengembangan diri/i, "🧠"],
+    [/bisnis|usaha|entrepreneur|manajemen/i, "💼"],
+    [/keuangan|finans|investasi|ekonomi/i, "💰"],
+    [/pendidikan|belajar|akademik|sekolah/i, "🎓"],
+    [/teknologi|komputer|digital|program/i, "💻"],
+    [/sejarah|budaya|sosial/i, "🏛️"],
+    [/sains|ilmiah|penelitian/i, "🔬"],
+    [/agama|spiritual|filsafat/i, "🧭"],
+    [/kesehatan|medis|olahraga|kebugaran/i, "❤️"],
+    [/seni|desain|kreatif|fotografi/i, "🎨"],
+    [/karier|pekerjaan|profesi|produktivitas/i, "📈"],
+    [/bahasa|komunikasi|menulis|literasi/i, "✍️"],
+    [/alam|lingkungan|pertanian/i, "🌿"],
+    [/fiksi|novel|cerita|sastra/i, "📖"]
+  ];
+  function categoryIcon(name, index, used) {
+    const match = CATEGORY_ICON_HINTS.find(([pattern]) => pattern.test(name));
+    const preferred = match?.[1];
+    if (preferred && !used.has(preferred)) { used.add(preferred); return preferred; }
+    const next = CATEGORY_ICON_POOL.find(icon => !used.has(icon));
+    if (next) { used.add(next); return next; }
+    // Fallback unik untuk katalog dengan kategori lebih banyak dari ikon utama.
+    const fallback = `◆${index + 1}`;
+    used.add(fallback);
+    return fallback;
+  }
+  function renderCategories() {
+    const names = [...new Set([
+      ...categories,
+      ...books.map(book => book.category?.name).filter(Boolean)
+    ])].sort((a, b) => a.localeCompare(b, "id"));
+    const box = $("categoryList");
+    box.replaceChildren();
+    const usedIcons = new Set();
+    const allButton = document.createElement("button");
+    allButton.type = "button";
+    allButton.className = "chip" + (selectedCategory === "" ? " active" : "");
+    allButton.innerHTML = '<span class="chip-icon" aria-hidden="true">🗂️</span><span class="chip-label">Semua</span>';
+    allButton.addEventListener("click", () => { selectedCategory = ""; renderCategories(); renderBooks(); });
+    box.appendChild(allButton);
+    names.forEach((name, index) => {
+      const button = document.createElement("button");
+      const icon = categoryIcon(name, index, usedIcons);
+      button.type = "button";
+      button.className = "chip" + (selectedCategory === name ? " active" : "");
+      button.innerHTML = `<span class="chip-icon" aria-hidden="true">${escapeHtml(icon)}</span><span class="chip-label">${escapeHtml(name)}</span>`;
+      button.setAttribute("aria-pressed", String(selectedCategory === name));
+      button.addEventListener("click", () => { selectedCategory = name; renderCategories(); renderBooks(); });
+      box.appendChild(button);
+    });
+  }
+  async function loadBooks() {
+    $("bookGrid").innerHTML = '<div class="empty">Menghubungkan ke perpustakaan...</div>';
+    const { data, error } = await db.from("books").select("id,title,author,description,cover_url,html_path,status,is_premium,price,category:categories(name,slug)").eq("status", "published");
+    if (error) {
+      $("bookGrid").innerHTML = '<div class="empty">Katalog belum dapat dimuat. Periksa koneksi Supabase dan kebijakan SELECT pada tabel books.</div>';
+      $("bookCount").textContent = "Katalog tidak tersedia";
+      console.error("Gagal memuat buku:", error);
+      return;
+    }
+    books = (data || []).sort((a,b) => String(a.title || "").localeCompare(String(b.title || ""), "id"));
+    renderCategories(); renderBooks();
+  }
+  function renderBooks() {
+    const query = $("searchInput").value.trim().toLocaleLowerCase("id");
+    const rows = books.filter(book => (!selectedCategory || book.category?.name === selectedCategory) &&
+      (!query || `${book.title || ""} ${book.author || ""} ${book.description || ""}`.toLocaleLowerCase("id").includes(query)));
+    $("bookCount").textContent = `${rows.length} ebook tersedia`;
+    const grid = $("bookGrid"); grid.replaceChildren();
+    if (!rows.length) {
+      grid.innerHTML = '<div class="empty">Belum ada ebook yang cocok. Coba kata kunci atau kategori lain.</div>';
+      return;
+    }
+    rows.forEach(book => {
+      const card = document.createElement("article"); card.className = "book";
+      const safeCoverUrl = /^https?:\/\//i.test(book.cover_url || "") ? book.cover_url : "";
+      const cover = safeCoverUrl
+        ? `<img loading="lazy" src="${escapeHtml(safeCoverUrl)}" alt="Sampul ${escapeHtml(book.title)}">`
+        : `<div class="placeholder">${escapeHtml(book.title || "NEXT BETTER")}</div>`;
+      const isFree = book.is_premium !== true;
+      const priceLabel = isFree ? "Gratis" : `Premium · Rp${Number(book.price || 0).toLocaleString("id-ID")}`;
+      card.innerHTML = `<div class="cover">${cover}</div><div class="book-info"><h3>${escapeHtml(book.title)}</h3><p>${escapeHtml(book.author || "Penulis tidak dicantumkan")} · ${escapeHtml(book.category?.name || "Umum")}</p><p class="desc">${escapeHtml(book.description || "")}</p><p><strong>${priceLabel}</strong></p><button class="btn small primary readBtn" type="button">${isFree ? "Baca ebook" : "Akses premium"}</button></div>`;
+      const action = card.querySelector(".readBtn");
+      action.addEventListener("click", () => {
+        if (!isFree) {
+          alert("Ebook ini termasuk konten premium. Fitur pembayaran dan verifikasi kepemilikan belum diaktifkan.");
+          return;
+        }
+        readBook(book);
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  async function checkAdmin(user) {
+    isAdmin = false;
+    const adminLink = $("adminBtn");
+    if (!user) { isAdmin = false; adminLink.hidden = true; return; }
+    const { data, error } = await db.from("admin_users").select("user_id").eq("user_id", user.id).maybeSingle();
+    isAdmin = !error && !!data;
+    adminLink.hidden = !(isAdmin && adminCodeVerified);
+    if (error) console.warn("Pemeriksaan role admin tidak berhasil:", error.message);
+  }
+  async function refreshSession() {
+    const { data, error } = await db.auth.getSession();
+    if (error) console.error(error);
+    currentUser = data?.session?.user || null;
+    if (!currentUser) {
+      adminCodeVerified = false;
+      sessionStorage.removeItem(ADMIN_CODE_SESSION_KEY);
+    }
+    $("loginBtn").textContent = currentUser ? "Akun" : "Masuk";
+    $("logoutAccountBtn").hidden = !currentUser;
+    if (currentUser) {
+      $("authEmail").value = currentUser.email || "";
+      message("authMessage", `Masuk sebagai ${currentUser.email || "pengguna"}.`, "ok");
+    } else {
+      message("authMessage", "Pengunjung dapat menjelajahi katalog. Masuk untuk fitur akun.");
+    }
+    await checkAdmin(currentUser);
+  }
+
+  async function readBook(book) {
+    $("readerTitle").textContent = book.title || "Membaca ebook";
+    $("readerContent").textContent = "Menyiapkan ebook...";
+    show("readerOverlay");
+    if (!currentUser) {
+      hide("readerOverlay");
+      show("authOverlay");
+      message("authMessage", "Masuk terlebih dahulu untuk membaca ebook.", "error");
+      return;
+    }
+    try {
+      const { data, error } = await db.functions.invoke("read-book", { body: { book_id: book.id } });
+      if (error || !data?.signedUrl) throw new Error(data?.error || error?.message || "Tautan baca tidak tersedia.");
+      const response = await fetch(data.signedUrl);
+      if (!response.ok) throw new Error(`File ebook gagal diambil (HTTP ${response.status}).`);
+      const html = await response.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      doc.querySelectorAll("script,iframe,object,embed,form,base,meta[http-equiv],link[rel=import]").forEach(node => node.remove());
+      doc.querySelectorAll("*").forEach(node => {
+        [...node.attributes].forEach(attr => {
+          const name = attr.name.toLowerCase();
+          const value = attr.value.trim();
+          if (name.startsWith("on") || name === "srcdoc" || name === "formaction") node.removeAttribute(attr.name);
+          else if (["href", "src", "xlink:href"].includes(name) && /^javascript:/i.test(value)) node.removeAttribute(attr.name);
+          else if (name === "style" && /url\s*\(\s*['"]?\s*(javascript:|data:text\/html)/i.test(value)) node.removeAttribute(attr.name);
+        });
+      });
+      const article = $("readerContent");
+      article.innerHTML = doc.body.innerHTML || "<p>Isi ebook kosong.</p>";
+      article.style.fontSize = readerSize + "px";
+      article.className = "readercontent " + (readerLight ? "light" : "dark");
+    } catch (error) {
+      $("readerContent").textContent = `Ebook tidak dapat dibuka: ${error.message}`;
+      console.error("Gagal membuka ebook:", error);
+    }
+  }
+  $("readerBack").addEventListener("click", () => hide("readerOverlay"));
+  $("fontUp").addEventListener("click", () => { readerSize = Math.min(30, readerSize + 1); $("readerContent").style.fontSize = readerSize + "px"; });
+  $("fontDown").addEventListener("click", () => { readerSize = Math.max(14, readerSize - 1); $("readerContent").style.fontSize = readerSize + "px"; });
+  $("themeToggle").addEventListener("click", () => {
+    readerLight = !readerLight;
+    $("readerContent").className = "readercontent " + (readerLight ? "light" : "dark");
+  });
+
+  $("loginBtn").addEventListener("click", () => show("authOverlay"));
+  $("showLogin").addEventListener("click", () => setAuthMode("login"));
+  $("showSignup").addEventListener("click", () => setAuthMode("signup"));
+  function setAuthMode(mode) {
+    authMode = mode;
+    $("authTitle").textContent = mode === "login" ? "Masuk" : "Daftar akun";
+    $("emailAuth").textContent = mode === "login" ? "Masuk" : "Daftar";
+    $("showLogin").classList.toggle("primary", mode === "login");
+    $("showSignup").classList.toggle("primary", mode === "signup");
+  }
+  $("emailAuth").addEventListener("click", async () => {
+    const email = $("authEmail").value.trim(), password = $("authPassword").value;
+    if (!email || !password) { message("authMessage", "Isi email dan password terlebih dahulu.", "error"); return; }
+    if (password.length < 6) { message("authMessage", "Password minimal 6 karakter.", "error"); return; }
+    const button = $("emailAuth"); button.disabled = true;
+    try {
+      const result = authMode === "login"
+        ? await db.auth.signInWithPassword({ email, password })
+        : await db.auth.signUp({ email, password });
+      if (result.error) throw result.error;
+      if (authMode === "login") {
+        message("authMessage", "Berhasil masuk.", "ok");
+        await refreshSession();
+        setTimeout(() => hide("authOverlay"), 350);
+      } else {
+        message("authMessage", result.data?.session
+          ? "Pendaftaran berhasil dan akun sudah aktif."
+          : "Pendaftaran berhasil. Periksa email untuk konfirmasi akun.", "ok");
+      }
+    } catch (error) { message("authMessage", error.message || "Autentikasi gagal.", "error"); }
+    finally { button.disabled = false; }
+  });
+  $("logoutAccountBtn").addEventListener("click", async () => {
+    const { error } = await db.auth.signOut();
+    if (error) { message("authMessage", error.message, "error"); return; }
+    adminCodeVerified = false;
+    sessionStorage.removeItem(ADMIN_CODE_SESSION_KEY);
+    await refreshSession();
+    $("authPassword").value = "";
+  });
+  db.auth.onAuthStateChange(() => { refreshSession(); });
+
+  $("searchInput").addEventListener("input", renderBooks);
+  $("searchBtn").addEventListener("click", renderBooks);
+  $("newsletterForm").addEventListener("submit", event => {
+    event.preventDefault();
+    $("newsletterMessage").textContent = "Newsletter belum diaktifkan. Formulir belum mengirim atau menyimpan alamat email.";
+  });
+
+  async function init() {
+    try {
+      await loadCategories();
+      await loadBooks();
+      await refreshSession();
+    } catch (error) {
+      console.error("Inisialisasi NEXT BETTER gagal:", error);
+      $("bookGrid").innerHTML = '<div class="empty">Terjadi kesalahan saat menyiapkan website. Muat ulang halaman atau periksa konfigurasi Supabase.</div>';
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
